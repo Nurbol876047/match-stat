@@ -64,7 +64,9 @@ export class AudioOscillator {
         if (isActive) {
           const osc = this.oscillators[activeIndex];
           if (osc) {
-             osc.frequency.setTargetAtTime(freq * (index + 1), this.ctx.currentTime, 0.05);
+             if (this.ctx) {
+        osc.frequency.setTargetAtTime(freq * (index + 1), this.ctx.currentTime, 0.05);
+      }
           }
           activeIndex++;
         }

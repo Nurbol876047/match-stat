@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Instances, Instance } from '@react-three/drei';
 import { getHeightAt, isValidSpawnPoint } from '../../utils/terrain';
 
-export const Forest = ({ isSimulator = true }: { isSimulator?: boolean }) => {
+export const Forest = () => {
   const trees = useMemo(() => {
     return Array.from({ length: 12000 }).map(() => {
       // Spawn trees over the entire map area (800x800)

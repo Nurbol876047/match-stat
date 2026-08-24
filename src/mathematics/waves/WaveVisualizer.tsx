@@ -46,6 +46,7 @@ export const WaveVisualizer = ({ frequency, harmonics = [true, false, false, fal
   });
 
   return (
+    // @ts-expect-error r3f line vs svg line TS conflict
     <line ref={lineRef} geometry={geometry}>
       <lineBasicMaterial color="#3b82f6" linewidth={3} transparent opacity={0.8} />
     </line>

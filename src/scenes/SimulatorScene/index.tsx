@@ -5,7 +5,6 @@ import * as THREE from 'three';
 import { Helicopter } from '../../models/helicopter';
 import { Forest } from '../../models/trees';
 import { Village } from '../../models/village';
-import { Mountains } from '../../models/mountains';
 import { getHeightAt, fbm } from '../../utils/terrain';
 
 const GlobalIndicators = ({ timeWarp, radius }: any) => {
@@ -73,7 +72,7 @@ const MovingHelicopter = ({
   // Lerp targets
   const currentVals = useRef({ rpm: 0, speed: 0, alt: 0, flow: 0 });
 
-  useFrame((state, delta) => {
+  useFrame((_state, delta) => {
     if (!ref.current) return;
     
     // Lerp values for smooth numbers
@@ -370,7 +369,7 @@ export const SimulatorScene = ({
 
           <group position={[0, 0, 0]}>
             <Terrain />
-            <Forest isSimulator />
+            <Forest />
             <Village />
           </group>
 

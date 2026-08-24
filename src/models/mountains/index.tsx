@@ -1,6 +1,4 @@
 import { useMemo, useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { useScroll } from '@react-three/drei';
 import * as THREE from 'three';
 
 // Simple pseudo-random noise for terrain displacement

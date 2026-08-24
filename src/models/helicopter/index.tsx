@@ -7,8 +7,7 @@ export const Helicopter = ({ isSimulator = false }: { isSimulator?: boolean }) =
   const rotor = useRef<THREE.Mesh>(null);
   const tailRotor = useRef<THREE.Mesh>(null);
 
-  useFrame((state) => {
-    // Rotate rotors
+  useFrame(() => {
     if (rotor.current) rotor.current.rotation.y += 0.4;
     if (tailRotor.current) tailRotor.current.rotation.x += 0.5;
   });

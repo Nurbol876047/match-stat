@@ -1,14 +1,13 @@
 import { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { Environment, ScrollControls } from '@react-three/drei';
-import { SceneType } from '../../app/routes';
+import { ScrollControls } from '@react-three/drei';
 import { KatonKaragaiScene } from '../KatonKaragaiScene';
 import { NatureScene } from '../NatureScene';
 import { MusicScene } from '../MusicScene';
 import { ArchitectureScene } from '../ArchitectureScene';
 
 interface HeroSceneProps {
-  currentScene: SceneType;
+  currentScene: string;
 }
 
 export const HeroScene = ({ currentScene }: HeroSceneProps) => {

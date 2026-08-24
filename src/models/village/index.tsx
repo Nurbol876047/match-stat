@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { isValidSpawnPoint, getHeightAt } from '../../utils/terrain';
+import { useMemo } from 'react';
+import { getHeightAt, isValidSpawnPoint } from '../../utils/terrain';
 
 export const Village = () => {
   const houses = useMemo(() => {

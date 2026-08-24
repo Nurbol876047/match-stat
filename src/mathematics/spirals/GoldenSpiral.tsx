@@ -27,6 +27,7 @@ export const GoldenSpiral = ({ ratio = 1.618 }) => {
 
   return (
     <group ref={group} scale={0.2}>
+      {/* @ts-expect-error r3f line vs svg line TS conflict */}
       <line geometry={points}>
         <lineBasicMaterial color="#d4af37" linewidth={2} transparent opacity={0.6} />
       </line>
