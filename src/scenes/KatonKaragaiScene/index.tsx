@@ -1,4 +1,4 @@
-import { Scroll, Sparkles, Cloud, Stars } from '@react-three/drei';
+import { Scroll, Sparkles, Stars } from '@react-three/drei';
 import { Helicopter } from '../../models/helicopter';
 import { Mountains } from '../../models/mountains';
 import { Forest } from '../../models/trees';
@@ -8,13 +8,6 @@ export const KatonKaragaiScene = () => {
     <group>
       {/* Atmosphere */}
       <Stars radius={100} depth={50} count={2000} factor={4} saturation={0} fade speed={1} />
-      
-      <group position={[0, -2, -20]}>
-        <Cloud opacity={0.5} speed={0.4} width={50} depth={5} segments={20} color="#16302e" />
-      </group>
-      <group position={[0, 2, -10]}>
-        <Cloud opacity={0.3} speed={0.2} width={30} depth={5} segments={10} color="#0a1217" />
-      </group>
       
       <Sparkles count={800} scale={50} size={2} speed={0.4} opacity={0.3} color="#d4af37" />
       

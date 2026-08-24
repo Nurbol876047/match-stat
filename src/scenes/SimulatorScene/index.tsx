@@ -1,5 +1,5 @@
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Sky, Environment, Html, MeshReflectorMaterial, SoftShadows } from '@react-three/drei';
+import { OrbitControls, Environment, Html } from '@react-three/drei';
 import { useRef, Suspense, useEffect, useMemo } from 'react';
 import * as THREE from 'three';
 import { Helicopter } from '../../models/helicopter';

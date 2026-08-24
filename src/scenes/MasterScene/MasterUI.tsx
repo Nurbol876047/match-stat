@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { globalOscillator } from '../../audio/oscillator';
 
-const PHI = (1 + Math.sqrt(5)) / 2; // 1.6180339887...
+
 
 export const MasterUI = ({ states, setStates }: any) => {
 

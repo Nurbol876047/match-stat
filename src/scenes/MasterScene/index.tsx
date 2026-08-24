@@ -3,7 +3,6 @@ import { Canvas, useThree } from '@react-three/fiber';
 import { Stars } from '@react-three/drei';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import * as THREE from 'three';
 
 import { Helicopter } from '../../models/helicopter';
 import { Mountains } from '../../models/mountains';
