@@ -91,7 +91,6 @@ export const App = () => {
               <li>Кез-келген параметрді өзгертіп симуляцияны бақылаңыз</li>
               <li>Картаны айналдыру үшін тышқанның сол жақ батырмасын басып тұрып жылжытыңыз</li>
               <li>Жақындату үшін дөңгелекті бұраңыз</li>
-              <li>Use the sliders to modify live mathematical dynamics in real-time</li>
             </ul>
           </div>
         </div>
