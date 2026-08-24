@@ -50,12 +50,20 @@ export const App = () => {
       <div className="w-full h-[45vh] md:w-[450px] md:h-full control-panel flex flex-col overflow-y-auto">
         <div className="p-4 md:p-6">
           
-          <div className="mb-6 flex items-center justify-between border-b border-white/10 pb-4">
-            <div>
-              <h2 className="text-xs md:text-sm font-bold text-white tracking-[0.15em] uppercase">Қазақстан, Катонқарағай</h2>
-              <p className="text-[10px] text-white/50 tracking-widest uppercase mt-1">Оқу симуляторы • 3D Локация</p>
-            </div>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-white/40"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <div className="mb-8 flex items-center justify-between border-b border-white/10 pb-5">
+            <h2 className="text-base md:text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-white/60 tracking-[0.2em] uppercase">
+              Қазақстан, Катонқарағай
+            </h2>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="url(#pin-grad)" strokeWidth="1.5" className="text-white/40 flex-shrink-0 ml-4">
+              <defs>
+                <linearGradient id="pin-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#ffffff" stopOpacity="0.8" />
+                  <stop offset="100%" stopColor="#ffffff" stopOpacity="0.2" />
+                </linearGradient>
+              </defs>
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
           </div>
 
           <div className="control-group">
