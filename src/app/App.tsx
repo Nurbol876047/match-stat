@@ -49,6 +49,15 @@ export const App = () => {
       {/* Control Panel (Bottom on mobile, Right on desktop) */}
       <div className="w-full h-[45vh] md:w-[450px] md:h-full control-panel flex flex-col overflow-y-auto">
         <div className="p-4 md:p-6">
+          
+          <div className="mb-6 flex items-center justify-between border-b border-white/10 pb-4">
+            <div>
+              <h2 className="text-xs md:text-sm font-bold text-white tracking-[0.15em] uppercase">Қазақстан, Катонқарағай</h2>
+              <p className="text-[10px] text-white/50 tracking-widest uppercase mt-1">Оқу симуляторы • 3D Локация</p>
+            </div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-white/40"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+
           <div className="control-group">
             <Slider label="Тікұшақ жылдамдығы" min={0} max={200} step={1} value={speed} onChange={setSpeed} unit="км/сағ" />
             <Slider label="Ұшу биіктігі" min={2} max={100} step={1} value={altitude} onChange={setAltitude} unit="м" />
