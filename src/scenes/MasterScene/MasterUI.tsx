@@ -1,9 +1,14 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { globalOscillator } from '../../audio/oscillator';
 
 
 
 export const MasterUI = ({ states, setStates }: any) => {
+  const [videoState, setVideoState] = useState({
+    isFormulaApplied: false,
+    showGrid: false,
+    recalcValue: 1.0
+  });
 
   useEffect(() => {
     if (states.music.isPlaying) {
@@ -160,6 +165,8 @@ export const MasterUI = ({ states, setStates }: any) => {
           формалардың ортақ тілі.
         </h2>
       </section>
+
+
 
       {/* Footer */}
       <footer className="w-full py-12 flex flex-col items-center justify-center text-center border-t border-white/5 bg-[#040608] pointer-events-auto mt-20">

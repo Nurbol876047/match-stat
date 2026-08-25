@@ -22,7 +22,116 @@ const Slider = ({ label, min, max, step, value, onChange, unit }: any) => {
   );
 };
 
+const FORMULAS = [
+  { 
+    id: 'golden', 
+    name: 'Алтын қима', 
+    equations: [
+      'φ = 1 + 1/(1 + 1/(...))',
+      'F(n) = (φⁿ - (1-φ)ⁿ) / √5',
+      'lim (n→∞) F(n+1)/F(n) = φ',
+      'f(x) = x · φ · k'
+    ] 
+  },
+  { 
+    id: 'fractal', 
+    name: 'Фрактал', 
+    equations: [
+      'z_{n+1} = z_n² + C',
+      'f(z) = z² + c₀ + c₁z⁻¹ + ...',
+      'dim_H(F) = inf{d ≥ 0 : H^d(F) = 0}',
+      'C = {c∈ℂ : lim sup|z_n| ≤ 2} · k'
+    ] 
+  },
+  { 
+    id: 'quantum', 
+    name: 'Квант', 
+    equations: [
+      'iħ(∂/∂t)Ψ(r,t) = ĤΨ(r,t)',
+      'P(x) = ∫|Ψ(x,t)|²dx = 1',
+      'Δx·Δp ≥ ħ/2',
+      'E_n = (n²π²ħ²)/(2mL²) · k'
+    ] 
+  },
+  { 
+    id: 'thermal', 
+    name: 'Спектр', 
+    equations: [
+      'E = σ · T⁴',
+      'λ_max = b / T',
+      'S = -k_B ∑ P_i ln(P_i)',
+      'Q = ε·σ·A(T_h⁴ - T_c⁴) · k'
+    ] 
+  },
+  { 
+    id: 'matrix', 
+    name: 'Матрица', 
+    equations: [
+      'T(v) = A·x + b',
+      'det(A - λI) = 0',
+      'A = U·Σ·V^T',
+      'v\' = ∇ × (A·k) + b'
+    ] 
+  },
+  { 
+    id: 'entropy', 
+    name: 'Энтропия', 
+    equations: [
+      'dS = dQ_{rev} / T ≥ 0',
+      'S = k_B ln(W)',
+      'H(X) = -∑ P(x) log₂P(x)',
+      'ΔS_{univ} = ΔS_{sys} + ΔS_{surr} > 0'
+    ] 
+  },
+  { 
+    id: 'tachyon', 
+    name: 'Тахион', 
+    equations: [
+      'E = (m₀·c²) / √( (v/c)² - 1 )',
+      'v > c, m² < 0',
+      'ds² = -c²dt² + dx² + dy² + dz² < 0',
+      'T_{μν} = (ρ + p/c²)U_μ U_ν + p g_{μν}'
+    ] 
+  },
+  { 
+    id: 'hologram', 
+    name: 'Голограмма', 
+    equations: [
+      'I(x,y) = |A_R + A_O|²',
+      'E(r,t) = ∫∫ U(ξ,η) [e^(ikr)/r] dξdη',
+      'H_{tot} = H_{ref} ⊗ H_{obj}',
+      'I_{rec} = I₀ · exp(-i φ(x,y)) · k'
+    ] 
+  },
+  { 
+    id: 'void', 
+    name: 'Қара құрдым', 
+    equations: [
+      'ds² = -(1 - r_s/r)dt² + dr²/(1 - r_s/r)',
+      'r_s = 2GM / c²',
+      'T_H = ħc³ / (8πG M k_B)',
+      'R_{μν} - ½R g_{μν} + Λ g_{μν} = 8πG/c⁴ T_{μν}'
+    ] 
+  },
+  { 
+    id: 'plasma', 
+    name: 'Плазма', 
+    equations: [
+      '∇ · E = ρ / ε₀, ∇ · B = 0',
+      '∇ × E = -∂B / ∂t',
+      '∇ × B = μ₀J + μ₀ε₀(∂E / ∂t)',
+      'f_p = √(n_e·e² / (m_e·ε₀)) · k'
+    ] 
+  },
+];
+
 export const App = () => {
+  const [videoState, setVideoState] = useState({
+    activeFormula: 'none',
+    showGrid: false,
+    recalcValue: 1.0
+  });
+
   const [speed, setSpeed] = useState(50);
   const [altitude, setAltitude] = useState(20);
   const [timeWarp, setTimeWarp] = useState(1);
@@ -38,7 +147,8 @@ export const App = () => {
   const [oscFreq, setOscFreq] = useState(2.0);
 
   return (
-    <div className="flex flex-col md:flex-row w-full min-h-screen bg-[#040608]">
+    <div className="flex flex-col w-full min-h-screen bg-[#040608] overflow-x-hidden">
+      <div className="flex flex-col md:flex-row w-full relative">
       {/* Simulation Viewport (Top on mobile, Left on desktop) */}
       <div className="w-full md:flex-1 relative flex flex-col">
         {/* Main 3D Scene */}
@@ -106,6 +216,143 @@ export const App = () => {
           </div>
         </div>
       </div>
+      </div>
+      
+      {/* 7. Video Experiment Section */}
+      <section id="section-video" className="h-auto min-h-[100vh] w-full flex flex-col justify-center py-32 px-8 md:px-12 pointer-events-auto bg-[#040608] relative video-experimental-block">
+        <h2 className="text-4xl md:text-5xl font-bold mb-2 text-white">04 <span className="text-white">ВИДЕО-АНАЛИЗ</span></h2>
+        <p className="text-white/60 text-lg md:text-xl max-w-md mb-12">Қозғалыстың математикалық моделі.</p>
+        
+        <div className="flex flex-col xl:flex-row gap-12 w-full max-w-7xl items-center xl:items-start">
+          {/* Video Container (Vertical Frame) */}
+          <div className={`w-full max-w-[440px] md:ml-12 xl:ml-20 shrink-0 relative rounded-[2rem] overflow-hidden border-8 border-white/10 shadow-[0_0_40px_rgba(255,255,255,0.1)] video-wrapper formula-${videoState.activeFormula} ${videoState.showGrid ? 'show-grid' : ''}`}>
+            <video 
+              id="math-video-player"
+              className="w-full h-full object-cover aspect-[9/16] bg-black/50"
+              controls
+              crossOrigin="anonymous"
+              loop
+              muted
+              playsInline
+            >
+              <source src="/video/demo.mp4" type="video/mp4" />
+              Your browser does not support HTML video.
+            </video>
+            
+            {/* Dynamic Overlay */}
+            <div className="video-overlay absolute inset-0 pointer-events-none mix-blend-screen opacity-0 transition-opacity duration-500"></div>
+          </div>
+          
+          {/* Controls */}
+          <div className="control-group w-full xl:flex-1 max-w-xl rounded-2xl bg-black/40 border border-white/10 backdrop-blur-md h-fit video-controls-panel">
+             <h3 className="mb-6 uppercase tracking-[0.15em] text-xs font-semibold text-white">Формула параметрлері</h3>
+             
+             <div className="mb-6">
+               <label className="text-xs mb-1 flex justify-between text-white/70">
+                 <span>Есептеу коэффициенті</span>
+                 <span aria-live="polite">{videoState.recalcValue.toFixed(2)}</span>
+               </label>
+               <input 
+                 type="range" 
+                 min="0.5" 
+                 max="3.0" 
+                 step="0.1" 
+                 value={videoState.recalcValue} 
+                 onChange={e => setVideoState(s => ({...s, recalcValue: Number(e.target.value)}))} 
+                 className="w-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-white" 
+                 style={{ '--val': `${((videoState.recalcValue - 0.5) / 2.5) * 100}%` } as React.CSSProperties}
+               />
+             </div>
+             
+             <div className="grid grid-cols-2 gap-2 mb-4 max-h-[160px] overflow-y-auto pr-2 custom-scrollbar">
+               {FORMULAS.map(formula => (
+                 <button 
+                   key={formula.id}
+                   onClick={() => setVideoState(s => ({...s, activeFormula: s.activeFormula === formula.id ? 'none' : formula.id}))}
+                   className={`ui-button w-full py-2 rounded-lg border text-[10px] uppercase tracking-widest transition-colors focus:outline-none focus:ring-2 focus:ring-white ${videoState.activeFormula === formula.id ? 'bg-white/20 border-white text-white shadow-[0_0_10px_rgba(255,255,255,0.3)]' : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/30 text-white/80 hover:text-white'}`}
+                 >
+                   {formula.name}
+                 </button>
+               ))}
+             </div>
+             
+             <button 
+               onClick={() => setVideoState(s => ({...s, showGrid: !s.showGrid}))}
+               className={`ui-button w-full py-3 mb-4 rounded-lg border text-xs uppercase tracking-widest transition-colors focus:outline-none focus:ring-2 focus:ring-white ${videoState.showGrid ? 'bg-white/20 border-white text-white' : 'bg-white/5 border-white/20 hover:bg-white/10 text-white'}`}
+             >
+               {videoState.showGrid ? 'Торды жасыру' : 'Математикалық торды көрсету'}
+             </button>
+
+             <button 
+               onClick={() => setVideoState(s => ({...s, recalcValue: 1.0, activeFormula: 'none', showGrid: false}))}
+               className="ui-button w-full py-3 rounded-lg bg-red-500/10 border border-red-500/40 text-xs uppercase tracking-widest text-red-400 hover:bg-red-500/20 transition-colors focus:outline-none focus:ring-2 focus:ring-red-400"
+             >
+               Қалпына келтіру
+             </button>
+
+             <div className="mt-6 pt-5 border-t border-white/10">
+               <p className="text-[10px] text-white/60 mb-2 uppercase tracking-widest">Трансформация</p>
+               <div className="text-white/90 font-mono text-[10px] sm:text-xs tracking-wider leading-relaxed space-y-1">
+                 <p className="text-white font-bold">k = {videoState.recalcValue.toFixed(2)}</p>
+                 {videoState.activeFormula === 'none' 
+                   ? <p className="text-white/60">f(x) = x · k²</p>
+                   : FORMULAS.find(f => f.id === videoState.activeFormula)?.equations.map((eq, i) => (
+                       <p key={i} className="text-[var(--color-accent-gold)]/90 drop-shadow-[0_0_2px_rgba(255,255,255,0.2)]">{eq}</p>
+                     ))
+                 }
+               </div>
+             </div>
+          </div>
+        </div>
+
+        {/* Isolated Styles for this specific block */}
+        <style dangerouslySetInnerHTML={{__html: `
+          .video-experimental-block {
+            border-top: 1px solid rgba(255,255,255,0.05);
+          }
+          .video-wrapper.formula-golden video {
+            filter: sepia(80%) saturate(150%) hue-rotate(-30deg) contrast(110%);
+          }
+          .video-wrapper.formula-fractal video {
+            filter: contrast(200%) saturate(200%) hue-rotate(90deg) brightness(0.8);
+          }
+          .video-wrapper.formula-quantum video {
+            filter: invert(100%) hue-rotate(180deg) saturate(50%);
+          }
+          .video-wrapper.formula-thermal video {
+            filter: grayscale(100%) sepia(100%) hue-rotate(90deg) saturate(400%) contrast(150%);
+          }
+          .video-wrapper.formula-matrix video {
+            filter: hue-rotate(100deg) saturate(250%) brightness(1.2) contrast(150%);
+          }
+          .video-wrapper.formula-entropy video {
+            filter: contrast(300%) grayscale(50%) blur(2px) invert(10%);
+          }
+          .video-wrapper.formula-tachyon video {
+            filter: hue-rotate(240deg) saturate(300%) blur(1px) brightness(1.5);
+          }
+          .video-wrapper.formula-hologram video {
+            filter: brightness(1.5) contrast(80%) sepia(50%) hue-rotate(180deg) opacity(80%);
+          }
+          .video-wrapper.formula-void video {
+            filter: brightness(0.3) contrast(200%) grayscale(100%);
+          }
+          .video-wrapper.formula-plasma video {
+            filter: saturate(400%) hue-rotate(300deg) contrast(150%) brightness(1.2);
+          }
+          .video-wrapper video {
+            transition: filter 0.5s ease;
+          }
+          .video-wrapper.show-grid .video-overlay {
+            opacity: 1;
+            background-image: 
+              linear-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: center center;
+          }
+        `}} />
+      </section>
     </div>
   );
 };
