@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { SimulatorScene } from '../scenes/SimulatorScene';
 import { HelicopterRotorView } from '../components/HelicopterRotorView';
 import { MusicalConstantView } from '../components/MusicalConstantView';
@@ -132,6 +132,17 @@ export const App = () => {
     recalcValue: 1.0
   });
 
+  const waveBars = useMemo(() => {
+    return Array.from({length: 40}).map((_, i) => {
+      const baseHeight = Math.sin((i / 39) * Math.PI) * 100;
+      return {
+        height: Math.max(15, baseHeight * 0.8 + Math.random() * 20),
+        duration: 0.3 + Math.random() * 0.4,
+        delay: Math.random()
+      };
+    });
+  }, []);
+
   const [speed, setSpeed] = useState(50);
   const [altitude, setAltitude] = useState(20);
   const [timeWarp, setTimeWarp] = useState(1);
@@ -224,23 +235,41 @@ export const App = () => {
         <p className="text-white/60 text-lg md:text-xl max-w-md mb-12">Қозғалыстың математикалық моделі.</p>
         
         <div className="flex flex-col xl:flex-row gap-12 w-full max-w-7xl items-center xl:items-start">
-          {/* Video Container (Vertical Frame) */}
-          <div className={`w-full max-w-[380px] md:ml-12 xl:ml-20 shrink-0 relative rounded-[2rem] overflow-hidden border-8 border-white/10 shadow-[0_0_40px_rgba(255,255,255,0.1)] video-wrapper formula-${videoState.activeFormula} ${videoState.showGrid ? 'show-grid' : ''}`}>
-            <video 
-              id="math-video-player"
-              className="w-full h-full object-cover aspect-[4/5] object-[center_70%] scale-[1.15] bg-black/50"
-              controls
-              crossOrigin="anonymous"
-              loop
-              muted
-              playsInline
-            >
-              <source src="/video/demo.mp4" type="video/mp4" />
-              Your browser does not support HTML video.
-            </video>
-            
-            {/* Dynamic Overlay */}
-            <div className="video-overlay absolute inset-0 pointer-events-none mix-blend-screen opacity-0 transition-opacity duration-500"></div>
+          {/* Left Column: Video + Sound Waves */}
+          <div className="flex flex-col w-full max-w-[380px] md:ml-12 xl:ml-20 shrink-0 gap-6">
+            {/* Video Container (Vertical Frame) */}
+            <div className={`w-full relative rounded-[2rem] overflow-hidden border-8 border-white/10 shadow-[0_0_40px_rgba(255,255,255,0.1)] video-wrapper formula-${videoState.activeFormula} ${videoState.showGrid ? 'show-grid' : ''}`}>
+              <video 
+                id="math-video-player"
+                className="w-full h-full object-cover aspect-[4/5] object-[center_70%] scale-[1.15] bg-black/50"
+                controls
+                crossOrigin="anonymous"
+                loop
+                muted
+                playsInline
+              >
+                <source src="/video/demo.mp4" type="video/mp4" />
+                Your browser does not support HTML video.
+              </video>
+              
+              {/* Dynamic Overlay */}
+              <div className="video-overlay absolute inset-0 pointer-events-none mix-blend-screen opacity-0 transition-opacity duration-500"></div>
+            </div>
+
+            {/* Sound Waves Mockup */}
+            <div className="w-full flex items-center justify-center gap-[3px] h-12 px-6 py-2 bg-white/5 rounded-2xl border border-white/10 shadow-inner">
+              {waveBars.map((bar, i) => (
+                <div 
+                  key={i}
+                  className="flex-1 bg-white/70 rounded-full origin-bottom"
+                  style={{
+                    height: `${bar.height}%`,
+                    animation: `sound-wave ${bar.duration}s ease-in-out infinite alternate`,
+                    animationDelay: `${bar.delay}s`
+                  }}
+                />
+              ))}
+            </div>
           </div>
           
           {/* Controls */}
@@ -350,6 +379,10 @@ export const App = () => {
               linear-gradient(90deg, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
             background-size: 50px 50px;
             background-position: center center;
+          }
+          @keyframes sound-wave {
+            0% { transform: scaleY(0.4); opacity: 0.4; }
+            100% { transform: scaleY(1.1); opacity: 1; }
           }
         `}} />
       </section>
