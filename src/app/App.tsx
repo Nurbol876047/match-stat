@@ -225,10 +225,10 @@ export const App = () => {
         
         <div className="flex flex-col xl:flex-row gap-12 w-full max-w-7xl items-center xl:items-start">
           {/* Video Container (Vertical Frame) */}
-          <div className={`w-full max-w-[440px] md:ml-12 xl:ml-20 shrink-0 relative rounded-[2rem] overflow-hidden border-8 border-white/10 shadow-[0_0_40px_rgba(255,255,255,0.1)] video-wrapper formula-${videoState.activeFormula} ${videoState.showGrid ? 'show-grid' : ''}`}>
+          <div className={`w-full max-w-[380px] md:ml-12 xl:ml-20 shrink-0 relative rounded-[2rem] overflow-hidden border-8 border-white/10 shadow-[0_0_40px_rgba(255,255,255,0.1)] video-wrapper formula-${videoState.activeFormula} ${videoState.showGrid ? 'show-grid' : ''}`}>
             <video 
               id="math-video-player"
-              className="w-full h-full object-cover aspect-[9/16] bg-black/50"
+              className="w-full h-full object-cover aspect-[4/5] object-[center_70%] scale-[1.15] bg-black/50"
               controls
               crossOrigin="anonymous"
               loop
