@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { SimulatorScene } from '../scenes/SimulatorScene';
+import { HelicopterRotorView } from '../components/HelicopterRotorView';
+import { MusicalConstantView } from '../components/MusicalConstantView';
 
 const Slider = ({ label, min, max, step, value, onChange, unit }: any) => {
   const percent = ((value - min) / (max - min)) * 100;
@@ -36,18 +38,27 @@ export const App = () => {
   const [oscFreq, setOscFreq] = useState(2.0);
 
   return (
-    <div className="flex flex-col md:flex-row w-screen h-screen overflow-hidden">
+    <div className="flex flex-col md:flex-row w-full min-h-screen bg-[#040608]">
       {/* Simulation Viewport (Top on mobile, Left on desktop) */}
-      <div className="w-full h-[55vh] md:h-full md:flex-1 relative">
-        <SimulatorScene 
-          speed={speed} altitude={altitude} timeWarp={timeWarp}
-          acceleration={acceleration} rotorRPM={rotorRPM} windSpeed={windSpeed} windDir={windDir}
-          radius={radius} bankBias={bankBias} oscAmp={oscAmp} oscFreq={oscFreq}
-        />
+      <div className="w-full md:flex-1 relative flex flex-col">
+        {/* Main 3D Scene */}
+        <div className="w-full h-[60vh] md:h-[75vh] shrink-0 relative">
+          <SimulatorScene 
+            speed={speed} altitude={altitude} timeWarp={timeWarp}
+            acceleration={acceleration} rotorRPM={rotorRPM} windSpeed={windSpeed} windDir={windDir}
+            radius={radius} bankBias={bankBias} oscAmp={oscAmp} oscFreq={oscFreq}
+          />
+        </div>
+        
+        {/* Helicopter Details Section */}
+        <div className="w-full shrink-0">
+          <HelicopterRotorView rotorRPM={rotorRPM} />
+          <MusicalConstantView />
+        </div>
       </div>
 
       {/* Control Panel (Bottom on mobile, Right on desktop) */}
-      <div className="w-full h-[45vh] md:w-[450px] md:h-full control-panel flex flex-col overflow-y-auto">
+      <div className="w-full h-[45vh] md:w-[450px] md:h-screen md:sticky md:top-0 control-panel flex flex-col overflow-y-auto border-l border-white/5 z-30">
         <div className="p-4 md:p-6">
           
           <div className="mb-8 flex items-center justify-between border-b border-white/10 pb-5">

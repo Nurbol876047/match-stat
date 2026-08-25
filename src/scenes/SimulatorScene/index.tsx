@@ -130,7 +130,7 @@ const MovingHelicopter = ({
   return (
     <>
       <group ref={ref}>
-        <Helicopter isSimulator />
+        <Helicopter isSimulator rotorRPM={rotorRPM} />
       </group>
       <group ref={textGroupRef}>
         <Html center zIndexRange={[100, 0]}>

@@ -2,14 +2,20 @@ import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-export const Helicopter = ({ isSimulator = false }: { isSimulator?: boolean }) => {
+export const Helicopter = ({ isSimulator = false, rotorRPM }: { isSimulator?: boolean; rotorRPM?: number }) => {
   const group = useRef<THREE.Group>(null);
   const rotor = useRef<THREE.Mesh>(null);
   const tailRotor = useRef<THREE.Mesh>(null);
 
-  useFrame(() => {
-    if (rotor.current) rotor.current.rotation.y += 0.4;
-    if (tailRotor.current) tailRotor.current.rotation.x += 0.5;
+  useFrame((state, delta) => {
+    if (rotorRPM !== undefined) {
+      const omega = (2 * Math.PI * rotorRPM) / 60;
+      if (rotor.current) rotor.current.rotation.y -= omega * delta;
+      if (tailRotor.current) tailRotor.current.rotation.x -= omega * delta;
+    } else {
+      if (rotor.current) rotor.current.rotation.y -= 0.4;
+      if (tailRotor.current) tailRotor.current.rotation.x -= 0.5;
+    }
   });
 
   return (
