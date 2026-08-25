@@ -256,19 +256,30 @@ export const App = () => {
               <div className="video-overlay absolute inset-0 pointer-events-none mix-blend-screen opacity-0 transition-opacity duration-500"></div>
             </div>
 
-            {/* Sound Waves Mockup */}
-            <div className="w-full flex items-center justify-center gap-[3px] h-12 px-6 py-2 bg-white/5 rounded-2xl border border-white/10 shadow-inner">
-              {waveBars.map((bar, i) => (
-                <div 
-                  key={i}
-                  className="flex-1 bg-white/70 rounded-full origin-bottom"
-                  style={{
-                    height: `${bar.height}%`,
-                    animation: `sound-wave ${bar.duration}s ease-in-out infinite alternate`,
-                    animationDelay: `${bar.delay}s`
-                  }}
-                />
-              ))}
+            {/* Mathematical Sound Waves Mockup */}
+            <div className="w-full relative flex items-center justify-center h-16 bg-white/5 rounded-2xl border border-white/10 shadow-inner overflow-hidden">
+              <div className="absolute top-1.5 left-4 text-[9px] text-white/50 font-mono z-10 hidden sm:block">y(t) = A·sin(ωt + φ)</div>
+              <div className="absolute bottom-1.5 right-4 text-[9px] text-white/50 font-mono z-10 hidden sm:block">v = λ·f</div>
+              
+              <div className="absolute inset-0 flex items-center w-[200%] animate-wave-scroll">
+                <svg className="w-full h-full text-white/80 opacity-70" viewBox="0 0 200 20" preserveAspectRatio="none">
+                  {/* Primary Sine Wave */}
+                  <path 
+                    d="M0,10 C5,0 15,20 20,10 C25,0 35,20 40,10 C45,0 55,20 60,10 C65,0 75,20 80,10 C85,0 95,20 100,10 C105,0 115,20 120,10 C125,0 135,20 140,10 C145,0 155,20 160,10 C165,0 175,20 180,10 C185,0 195,20 200,10" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="0.5"
+                  />
+                  {/* Secondary Sine Wave (Harmonic) */}
+                  <path 
+                    d="M0,10 C10,-5 10,25 20,10 C30,-5 30,25 40,10 C50,-5 50,25 60,10 C70,-5 70,25 80,10 C90,-5 90,25 100,10 C110,-5 110,25 120,10 C130,-5 130,25 140,10 C150,-5 150,25 160,10 C170,-5 170,25 180,10 C190,-5 190,25 200,10" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="0.2"
+                    className="opacity-40"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
           
@@ -380,9 +391,12 @@ export const App = () => {
             background-size: 50px 50px;
             background-position: center center;
           }
-          @keyframes sound-wave {
-            0% { transform: scaleY(0.4); opacity: 0.4; }
-            100% { transform: scaleY(1.1); opacity: 1; }
+          @keyframes wave-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+          .animate-wave-scroll {
+            animation: wave-scroll 4s ease-in-out infinite alternate;
           }
         `}} />
       </section>
