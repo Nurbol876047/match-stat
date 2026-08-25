@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Environment, ContactShadows, Text } from '@react-three/drei';
 import * as THREE from 'three';
@@ -64,8 +64,7 @@ const OrbitingFormulas = ({ rotorRPM }: Props) => {
                 color={colors[ringIndex]}
                 anchorX="center"
                 anchorY="middle"
-                opacity={0.8}
-                transparent
+                fillOpacity={0.8}
               >
                 {formula}
               </Text>
@@ -81,7 +80,7 @@ const HelicopterModel = ({ rotorRPM }: Props) => {
   const mainRotorRef = useRef<THREE.Group>(null);
   const tailRotorRef = useRef<THREE.Group>(null);
 
-  useFrame((state, delta) => {
+  useFrame((_, delta) => {
     const omega = (2 * Math.PI * rotorRPM) / 60;
     if (mainRotorRef.current) mainRotorRef.current.rotation.y -= omega * delta;
     if (tailRotorRef.current) tailRotorRef.current.rotation.x -= omega * delta;

@@ -7,7 +7,7 @@ export const Helicopter = ({ isSimulator = false, rotorRPM }: { isSimulator?: bo
   const rotor = useRef<THREE.Mesh>(null);
   const tailRotor = useRef<THREE.Mesh>(null);
 
-  useFrame((state, delta) => {
+  useFrame((_, delta) => {
     if (rotorRPM !== undefined) {
       const omega = (2 * Math.PI * rotorRPM) / 60;
       if (rotor.current) rotor.current.rotation.y -= omega * delta;
