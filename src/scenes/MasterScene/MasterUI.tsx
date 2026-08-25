@@ -1,15 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { globalOscillator } from '../../audio/oscillator';
 
 
 
 export const MasterUI = ({ states, setStates }: any) => {
-  const [videoState, setVideoState] = useState({
-    isFormulaApplied: false,
-    showGrid: false,
-    recalcValue: 1.0
-  });
-
   useEffect(() => {
     if (states.music.isPlaying) {
       globalOscillator.play(states.music.freq, states.music.harmonics);
