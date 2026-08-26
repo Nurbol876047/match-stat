@@ -1,7 +1,8 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Environment, ContactShadows, Text } from '@react-three/drei';
 import * as THREE from 'three';
+import { HandTracking } from './HandTracking';
 
 interface Props {
   rotorRPM: number;
@@ -76,18 +77,57 @@ const OrbitingFormulas = ({ rotorRPM }: Props) => {
   );
 };
 
-const HelicopterModel = ({ rotorRPM }: Props) => {
+interface HelicopterProps {
+  rotorRPM: number;
+  bankBias?: number; // legacy, can ignore
+  pitchBias?: number; // up/down
+  yawBias?: number; // left/right
+  altitudeOffset?: number;
+  sideOffset?: number;
+}
+
+const HelicopterModel = ({ rotorRPM, bankBias = 0, pitchBias = 0, yawBias = 0, altitudeOffset = 0, sideOffset = 0 }: HelicopterProps) => {
   const mainRotorRef = useRef<THREE.Group>(null);
   const tailRotorRef = useRef<THREE.Group>(null);
+  const bodyRef = useRef<THREE.Group>(null);
 
   useFrame((_, delta) => {
+    // 1. Rotor spinning
     const omega = (2 * Math.PI * rotorRPM) / 60;
     if (mainRotorRef.current) mainRotorRef.current.rotation.y -= omega * delta;
     if (tailRotorRef.current) tailRotorRef.current.rotation.x -= omega * delta;
+
+    // 2. Smooth Interpolation (Lerp) for position and rotation
+    if (bodyRef.current) {
+      const lerpSpeed = 15.0; // Быстрый и четкий отклик
+      
+      // Position
+      bodyRef.current.position.x += (sideOffset - bodyRef.current.position.x) * lerpSpeed * delta;
+      bodyRef.current.position.y += (altitudeOffset - bodyRef.current.position.y) * lerpSpeed * delta;
+      
+      // Shortest path Angular Lerp to avoid 180-degree jumps
+      const lerpAngle = (current: number, target: number, speed: number, dt: number) => {
+        let deltaAngle = target - current;
+        // Normalize delta to [-PI, PI]
+        deltaAngle = ((deltaAngle + Math.PI) % (Math.PI * 2)) - Math.PI;
+        // In JS, modulo of negative number is negative, so we need extra step if we want strict positive modulo,
+        // but `(a % b + b) % b` is the safe way:
+        deltaAngle = ((deltaAngle % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2) - Math.PI;
+        
+        return current + deltaAngle * speed * dt;
+      };
+
+      bodyRef.current.rotation.x = lerpAngle(bodyRef.current.rotation.x, pitchBias, lerpSpeed, delta);
+      bodyRef.current.rotation.y = lerpAngle(bodyRef.current.rotation.y, -yawBias, lerpSpeed, delta);
+      
+      // Optional: slight roll based on yaw to make the turn look natural
+      const targetBank = yawBias * 0.3 + bankBias;
+      bodyRef.current.rotation.z = lerpAngle(bodyRef.current.rotation.z, -targetBank, lerpSpeed, delta);
+    }
   });
 
   return (
-    <group scale={0.8}>
+    <group scale={0.8} ref={bodyRef}>
       {/* Фюзеляж (Fuselage) */}
       <mesh position={[0, 0, 0]} scale={[0.8, 1, 2.5]} castShadow receiveShadow>
         <sphereGeometry args={[1, 32, 32]} />
@@ -194,9 +234,19 @@ const HelicopterModel = ({ rotorRPM }: Props) => {
   );
 };
 
-export const HelicopterRotorView = ({ rotorRPM }: Props) => {
-  const omegaRad = (2 * Math.PI * rotorRPM) / 60;
-  const omegaRev = rotorRPM / 60;
+export const HelicopterRotorView = ({ rotorRPM: propRotorRPM, bankBias: propBankBias = 0 }: Props) => {
+  const [gesture, setGesture] = useState<any>(null);
+
+  const isTracking = gesture && gesture.wingAmplitude > 0;
+  
+  const currentRotorRPM = isTracking ? 100 + gesture.wingAmplitude * 700 : propRotorRPM;
+  const currentYawBias = isTracking ? gesture.yaw : 0; // Left/Right steer
+  const currentPitchBias = isTracking ? gesture.pitch : 0; // Forward/Back tilt
+  const currentAltOffset = isTracking ? (0.5 - gesture.position.y) * 4 : 0; // Up/Down movement
+  const currentSideOffset = isTracking ? (gesture.position.x - 0.5) * 4 : 0; // Left/Right movement
+
+  const omegaRad = (2 * Math.PI * currentRotorRPM) / 60;
+  const omegaRev = currentRotorRPM / 60;
 
   return (
     <div className="h-[350px] md:h-[450px] w-full border-t border-white/10 flex flex-col md:flex-row relative bg-[#040608] shrink-0 z-20 shadow-2xl">
@@ -217,8 +267,15 @@ export const HelicopterRotorView = ({ rotorRPM }: Props) => {
           <ContactShadows position={[0, -1.2, 0]} opacity={0.6} scale={15} blur={1.5} far={4} />
 
           <group rotation={[0, -Math.PI / 6, 0]}>
-            <HelicopterModel rotorRPM={rotorRPM} />
-            <OrbitingFormulas rotorRPM={rotorRPM} />
+            <HelicopterModel 
+              rotorRPM={currentRotorRPM} 
+              bankBias={propBankBias} 
+              pitchBias={currentPitchBias}
+              yawBias={currentYawBias}
+              altitudeOffset={currentAltOffset}
+              sideOffset={currentSideOffset}
+            />
+            <OrbitingFormulas rotorRPM={currentRotorRPM} />
           </group>
         </Canvas>
         
@@ -231,6 +288,8 @@ export const HelicopterRotorView = ({ rotorRPM }: Props) => {
           Физика айналуы (Вращение)
         </h3>
         
+        <HandTracking onGestureUpdate={setGesture} className="mb-6" />
+        
         <div className="space-y-4">
           <div className="bg-white/5 p-3 rounded border border-white/10">
             <p className="text-[10px] text-white/50 mb-1 uppercase tracking-widest">Формула (Угловая скорость)</p>
@@ -242,7 +301,7 @@ export const HelicopterRotorView = ({ rotorRPM }: Props) => {
             <div className="flex flex-col gap-2">
               <div className="flex justify-between items-center border-b border-white/5 pb-1">
                 <span className="text-xs text-white/70">N (RPM):</span>
-                <span className="font-mono text-sm text-[var(--color-accent-gold, #fbbf24)]">{Math.round(rotorRPM)} айн/м</span>
+                <span className="font-mono text-sm text-[var(--color-accent-gold, #fbbf24)]">{Math.round(currentRotorRPM)} айн/м</span>
               </div>
               <div className="flex justify-between items-center border-b border-white/5 pb-1">
                 <span className="text-xs text-white/70">ω (Угловая скорость):</span>
