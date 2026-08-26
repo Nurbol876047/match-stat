@@ -1,5 +1,4 @@
-import { useState, useMemo } from 'react';
-import type { GestureState } from '../components/HandTracking/GestureMapper';
+import { useState } from 'react';
 import { SimulatorScene } from '../scenes/SimulatorScene';
 import { HelicopterRotorView } from '../components/HelicopterRotorView';
 import { MusicalConstantView } from '../components/MusicalConstantView';
@@ -263,17 +262,6 @@ const VideoExperimentItem = ({ src, title, formulaTop, formulaBottom, waveType =
 
 export const App = () => {
   
-
-  const waveBars = useMemo(() => {
-    return Array.from({ length: 40 }).map((_, i) => {
-      const baseHeight = Math.sin((i / 39) * Math.PI) * 100;
-      return {
-        height: Math.max(15, baseHeight * 0.8 + Math.random() * 20),
-        duration: 0.3 + Math.random() * 0.4,
-        delay: Math.random()
-      };
-    });
-  }, []);
 
   const [speed, setSpeed] = useState(50);
   const [altitude, setAltitude] = useState(20);

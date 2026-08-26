@@ -6,6 +6,7 @@ import { HandTracking } from './HandTracking';
 
 interface Props {
   rotorRPM: number;
+  bankBias?: number;
 }
 
 const OrbitingFormulas = ({ rotorRPM }: Props) => {
